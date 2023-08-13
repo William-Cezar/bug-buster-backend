@@ -31,9 +31,19 @@ def user_logout(request):
     
     return JsonResponse({'success': False, 'message': 'Método não permitido.'}, status=405)
 
-@login_required
+@csrf_exempt
+def is_authenticated(request):
+    if request.method == 'GET':
+        if request.user.is_authenticated:
+            return JsonResponse({'is_authenticated': True})
+        else:
+            return JsonResponse({'is_authenticated': False})
+    return JsonResponse({'success': False, 'message': 'Método não permitido.'}, status=405)
+
+
 @csrf_exempt
 def report_bug(request):
+    print(request.COOKIES)
     if request.method == 'POST':
         data = json.loads(request.body)
 
